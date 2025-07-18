@@ -12,6 +12,7 @@ function App() {
   const [activeTab, setActiveTab] = useState('onboarding');
   const [user, setUser] = useState<{ name: string; email: string } | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [hasGeneratedPlan, setHasGeneratedPlan] = useState(false);
 
   const handleLogin = (credentials: { email: string; password: string }) => {
     // In a real app, this would validate credentials with your backend
@@ -27,7 +28,12 @@ function App() {
   const handleLogout = () => {
     setUser(null);
     setIsLoggedIn(false);
+    setHasGeneratedPlan(false);
     setActiveTab('onboarding');
+  };
+
+  const handlePlanGenerated = () => {
+    setHasGeneratedPlan(true);
   };
 
   // Show login page if not logged in
@@ -39,7 +45,7 @@ function App() {
       case 'onboarding':
         return <OnboardingSection />;
       case 'ai-assistant':
-        return <AIAssistantSection />;
+        return <AIAssistantSection onPlanGenerated={handlePlanGenerated} />;
       case 'teacher-poli':
         return <TeacherPoliSection />;
       case 'resources':
@@ -63,7 +69,11 @@ function App() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header userName={user.name} onLogout={handleLogout} />
-      <Navigation activeTab={activeTab} onTabChange={setActiveTab} />
+      <Navigation 
+        activeTab={activeTab} 
+        onTabChange={setActiveTab} 
+        hasGeneratedPlan={hasGeneratedPlan}
+      />
       <main>
         {renderContent()}
       </main>

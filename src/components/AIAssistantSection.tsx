@@ -8,7 +8,11 @@ interface Message {
   timestamp: Date;
 }
 
-export default function AIAssistantSection() {
+interface AIAssistantSectionProps {
+  onPlanGenerated: () => void;
+}
+
+export default function AIAssistantSection({ onPlanGenerated }: AIAssistantSectionProps) {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -74,6 +78,9 @@ export default function AIAssistantSection() {
         dailyTime: '45 minutos',
         generatedAt: new Date()
       });
+      
+      // Notify parent component that plan was generated
+      onPlanGenerated();
       
       setIsLoading(false);
     }, 2000);
@@ -155,7 +162,7 @@ export default function AIAssistantSection() {
                 <span className="sm:hidden">Baixar PDF</span>
               </button>
               <p className="text-xs text-gray-500 mt-2 text-center">
-                Válido por 30 dias. Após esse período, gere um novo plano.
+                ✅ Parabéns! Você desbloqueou todas as áreas da plataforma.
               </p>
             </div>
           )}

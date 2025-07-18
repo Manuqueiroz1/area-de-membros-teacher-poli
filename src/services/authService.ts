@@ -147,7 +147,18 @@ class AuthService {
         body: JSON.stringify({ email, name }),
       });
 
-      const data = await response.json();
+      if (!response.ok) {
+        console.error('Simulate purchase failed:', response.status, response.statusText);
+        return false;
+      }
+
+      const text = await response.text();
+      if (!text) {
+        console.error('Empty response from server');
+        return false;
+      }
+
+      const data = JSON.parse(text);
       return data.success;
     } catch (error) {
       console.error('Simulate purchase error:', error);

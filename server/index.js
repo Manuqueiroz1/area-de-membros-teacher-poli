@@ -6,6 +6,17 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+// Add error handling for missing dependencies
+process.on('uncaughtException', (error) => {
+  console.error('Uncaught Exception:', error);
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+  process.exit(1);
+});
+
 const app = express();
 const PORT = process.env.PORT || 3001;
 
@@ -243,6 +254,7 @@ app.post('/test/simulate-purchase', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`🚀 Server running on http://localhost:${PORT}`);
+  console.log(`📡 Ready to receive requests`);
   console.log(`Webhook URL: http://localhost:${PORT}/webhook/hotmart`);
 });

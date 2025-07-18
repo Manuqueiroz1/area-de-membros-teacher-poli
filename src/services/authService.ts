@@ -139,7 +139,7 @@ class AuthService {
   // Simulate purchase for testing
   async simulatePurchase(email: string, name: string): Promise<boolean> {
     try {
-      const response = await fetch(`${API_BASE_URL}/test/simulate-purchase`, {
+      const response = await fetch('/api/test/simulate-purchase', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

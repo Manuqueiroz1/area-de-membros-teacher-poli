@@ -220,7 +220,7 @@ app.post('/api/auth/complete-onboarding', async (req, res) => {
 });
 
 // Test endpoint to simulate a purchase (for development)
-app.post('/api/test/simulate-purchase', async (req, res) => {
+app.post('/test/simulate-purchase', async (req, res) => {
   try {
     const { email, name } = req.body;
     

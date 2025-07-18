@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import LoginPage from './components/LoginPage';
+import { authService, type User } from './services/authService';
 import Header from './components/Header';
 import Navigation from './components/Navigation';
 import OnboardingSection from './components/OnboardingSection';
@@ -10,28 +11,17 @@ import CommunitySection from './components/CommunitySection';
 
 function App() {
   const [activeTab, setActiveTab] = useState('onboarding');
-  const [user, setUser] = useState<{ name: string; email: string } | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [hasGeneratedPlan, setHasGeneratedPlan] = useState(false);
   const [isFirstTimeUser, setIsFirstTimeUser] = useState(true);
 
-  const handleLogin = (credentials: { email: string; password: string }) => {
-    // In a real app, this would validate credentials with your backend
-    // For now, we'll simulate a successful login
-    const userName = credentials.email.split('@')[0];
-    
-    // Simulate checking if user has completed onboarding before
-    // In a real app, this would come from your backend/database
-    const hasCompletedOnboarding = localStorage.getItem(`onboarding_completed_${credentials.email}`);
-    
-    setUser({ 
-      name: userName.charAt(0).toUpperCase() + userName.slice(1),
-      email: credentials.email 
-    });
+  const handleLogin = (userData: User) => {
+    setUser(userData);
     setIsLoggedIn(true);
     
     // If user has completed onboarding before, unlock everything
-    if (hasCompletedOnboarding) {
+    if (userData.hasCompletedOnboarding) {
       setHasGeneratedPlan(true);
       setIsFirstTimeUser(false);
     } else {
@@ -41,6 +31,7 @@ function App() {
   };
 
   const handleLogout = () => {
+    authService.logout();
     setUser(null);
     setIsLoggedIn(false);
     setHasGeneratedPlan(false);
@@ -48,13 +39,13 @@ function App() {
     setActiveTab('onboarding');
   };
 
-  const handlePlanGenerated = () => {
+  const handlePlanGenerated = async () => {
     setHasGeneratedPlan(true);
     setIsFirstTimeUser(false);
     
-    // Mark onboarding as completed for this user
-    if (user?.email) {
-      localStorage.setItem(`onboarding_completed_${user.email}`, 'true');
+    // Update onboarding status in backend
+    if (user) {
+      await authService.completeOnboarding(user.email);
     }
   };
 

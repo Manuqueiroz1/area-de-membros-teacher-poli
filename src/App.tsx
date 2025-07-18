@@ -13,27 +13,49 @@ function App() {
   const [user, setUser] = useState<{ name: string; email: string } | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [hasGeneratedPlan, setHasGeneratedPlan] = useState(false);
+  const [isFirstTimeUser, setIsFirstTimeUser] = useState(true);
 
   const handleLogin = (credentials: { email: string; password: string }) => {
     // In a real app, this would validate credentials with your backend
     // For now, we'll simulate a successful login
     const userName = credentials.email.split('@')[0];
+    
+    // Simulate checking if user has completed onboarding before
+    // In a real app, this would come from your backend/database
+    const hasCompletedOnboarding = localStorage.getItem(`onboarding_completed_${credentials.email}`);
+    
     setUser({ 
       name: userName.charAt(0).toUpperCase() + userName.slice(1),
       email: credentials.email 
     });
     setIsLoggedIn(true);
+    
+    // If user has completed onboarding before, unlock everything
+    if (hasCompletedOnboarding) {
+      setHasGeneratedPlan(true);
+      setIsFirstTimeUser(false);
+    } else {
+      setHasGeneratedPlan(false);
+      setIsFirstTimeUser(true);
+    }
   };
 
   const handleLogout = () => {
     setUser(null);
     setIsLoggedIn(false);
     setHasGeneratedPlan(false);
+    setIsFirstTimeUser(true);
     setActiveTab('onboarding');
   };
 
   const handlePlanGenerated = () => {
     setHasGeneratedPlan(true);
+    setIsFirstTimeUser(false);
+    
+    // Mark onboarding as completed for this user
+    if (user?.email) {
+      localStorage.setItem(`onboarding_completed_${user.email}`, 'true');
+    }
   };
 
   // Show login page if not logged in
@@ -73,6 +95,7 @@ function App() {
         activeTab={activeTab} 
         onTabChange={setActiveTab} 
         hasGeneratedPlan={hasGeneratedPlan}
+        isFirstTimeUser={isFirstTimeUser}
       />
       <main>
         {renderContent()}

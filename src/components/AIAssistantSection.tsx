@@ -162,7 +162,7 @@ export default function AIAssistantSection({ onPlanGenerated }: AIAssistantSecti
                 <span className="sm:hidden">Baixar PDF</span>
               </button>
               <p className="text-xs text-gray-500 mt-2 text-center">
-                ✅ Parabéns! Você desbloqueou todas as áreas da plataforma.
+                ✅ Parabéns! Agora você tem acesso completo à plataforma.
               </p>
             </div>
           )}

@@ -5,16 +5,17 @@ interface NavigationProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
   hasGeneratedPlan: boolean;
+  isFirstTimeUser: boolean;
 }
 
-export default function Navigation({ activeTab, onTabChange, hasGeneratedPlan }: NavigationProps) {
+export default function Navigation({ activeTab, onTabChange, hasGeneratedPlan, isFirstTimeUser }: NavigationProps) {
   const tabs = [
     { id: 'onboarding', label: 'Comece por Aqui', icon: Play, locked: false },
     { id: 'ai-assistant', label: 'Gere seu Plano de Estudos', icon: Brain, locked: false },
-    { id: 'teacher-poli', label: 'Teacher Poli', icon: ExternalLink, locked: !hasGeneratedPlan },
-    { id: 'resources', label: 'Bônus', icon: BookOpen, locked: !hasGeneratedPlan },
-    { id: 'community', label: 'Comunidade', icon: Users, locked: !hasGeneratedPlan },
-    { id: 'settings', label: 'Configurações', icon: Settings, locked: !hasGeneratedPlan },
+    { id: 'teacher-poli', label: 'Teacher Poli', icon: ExternalLink, locked: isFirstTimeUser && !hasGeneratedPlan },
+    { id: 'resources', label: 'Bônus', icon: BookOpen, locked: isFirstTimeUser && !hasGeneratedPlan },
+    { id: 'community', label: 'Comunidade', icon: Users, locked: isFirstTimeUser && !hasGeneratedPlan },
+    { id: 'settings', label: 'Configurações', icon: Settings, locked: isFirstTimeUser && !hasGeneratedPlan },
   ];
 
   const handleTabClick = (tab: any) => {

@@ -24,6 +24,27 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.json({ status: 'OK', timestamp: new Date().toISOString() });
+});
+
+// Root endpoint
+app.get('/', (req, res) => {
+  res.json({ 
+    message: 'Teacher Poli API Server', 
+    version: '1.0.0',
+    endpoints: [
+      'POST /webhook/hotmart',
+      'POST /auth/check-purchase',
+      'POST /auth/create-password', 
+      'POST /auth/login',
+      'POST /auth/complete-onboarding',
+      'POST /simulate-purchase'
+    ]
+  });
+});
+
 // In-memory database simulation (replace with real database)
 const users = new Map();
 const purchases = new Map();
@@ -64,7 +85,7 @@ app.post('/webhook/hotmart', async (req, res) => {
 });
 
 // Check if email has valid purchase
-app.post('/api/auth/check-purchase', async (req, res) => {
+app.post('/auth/check-purchase', async (req, res) => {
   try {
     const { email } = req.body;
     
@@ -101,7 +122,7 @@ app.post('/api/auth/check-purchase', async (req, res) => {
 });
 
 // Create password for first-time user
-app.post('/api/auth/create-password', async (req, res) => {
+app.post('/auth/create-password', async (req, res) => {
   try {
     const { email, password, name } = req.body;
     
@@ -159,7 +180,7 @@ app.post('/api/auth/create-password', async (req, res) => {
 });
 
 // Login with existing password
-app.post('/api/auth/login', async (req, res) => {
+app.post('/auth/login', async (req, res) => {
   try {
     const { email, password } = req.body;
     
@@ -212,7 +233,7 @@ app.post('/api/auth/login', async (req, res) => {
 });
 
 // Update onboarding status
-app.post('/api/auth/complete-onboarding', async (req, res) => {
+app.post('/auth/complete-onboarding', async (req, res) => {
   try {
     const { email } = req.body;
     
@@ -233,7 +254,7 @@ app.post('/api/auth/complete-onboarding', async (req, res) => {
 });
 
 // Test endpoint to simulate a purchase (for development)
-app.post('/test/simulate-purchase', async (req, res) => {
+app.post('/simulate-purchase', async (req, res) => {
   try {
     const { email, name } = req.body;
     

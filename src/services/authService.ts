@@ -1,4 +1,5 @@
-const API_BASE_URL = '/api';
+// Use environment variable for API URL or fallback to proxy
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 export interface User {
   email: string;
@@ -139,7 +140,7 @@ class AuthService {
   // Simulate purchase for testing
   async simulatePurchase(email: string, name: string): Promise<boolean> {
     try {
-      const response = await fetch('/api/test/simulate-purchase', {
+      const response = await fetch(`${API_BASE_URL}/simulate-purchase`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

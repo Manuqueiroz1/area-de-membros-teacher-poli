@@ -1,25 +1,29 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [react()],
   server: {
+    host: '0.0.0.0',
+    port: 5173,
     proxy: {
       '/api': {
-        target: 'http://localhost:3000',
+        target: mode === 'development' ? 'http://localhost:3000' : undefined,
         changeOrigin: true,
       },
     },
   },
   build: {
     outDir: 'dist',
-    assetsDir: 'assets',
-    sourcemap: false,
-    minify: 'terser',
+    emptyOutDir: true,
+    sourcemap: mode === 'development',
     rollupOptions: {
       output: {
-        manualChunks: undefined,
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          lucide: ['lucide-react'],
+        },
       },
     },
   },
-});
+}));
